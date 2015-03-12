@@ -367,7 +367,7 @@ class Saml2Client(object):
         return self.config.name
 
     def authn(self, location, session_id, vorg="", scoping=None, log=None,
-                sign=None, binding=saml2.BINDING_HTTP_POST,
+                sign=None, binding=saml2.BINDING_HTTP_POST, nameid_format=saml.NAMEID_FORMAT_TRANSIENT,
                 service_url_binding=None):
         """
         Construct a Authentication Request
@@ -404,11 +404,11 @@ class Saml2Client(object):
 
         return self.authn_request(session_id, location, service_url,
                                   spentityid, my_name, vorg, scoping, log,
-                                  sign, binding=binding)
+                                  sign, binding=binding, nameid_format=nameid_format)
 
     def authenticate(self, entityid=None, relay_state="",
                      binding=saml2.BINDING_HTTP_REDIRECT,
-                     log=None, vorg="", scoping=None, sign=None):
+                     log=None, vorg="", scoping=None, sign=None, nameid_format=saml.NAMEID_FORMAT_TRANSIENT):
         """ Makes an authentication request.
 
         :param entityid: The entity ID of the IdP to send the request to
@@ -426,7 +426,8 @@ class Saml2Client(object):
         session_id = sid()
 
         _req_str = "%s" % self.authn(location, session_id, vorg, scoping, log,
-                                       sign)
+                                       sign, nameid_format=nameid_format)
+        print _req_str
 
         if log:
             log.info("AuthNReq: %s" % _req_str)
